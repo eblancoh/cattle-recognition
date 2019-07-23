@@ -9,10 +9,11 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.optimizers import SGD
 from keras.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard
 from datetime import datetime
-
 from PIL import Image
-import os
 import argparse
+import json
+import os
+
 
 
 class CustomVGGModel(object):
@@ -147,12 +148,12 @@ class FitGenerator(object):
 
     def train(self, farm):
 
-        CheckpointsMkdir().check()
+        CheckpointsMkdir(farm).check()
         LogsMkdir().check()
     
         early_stopping_callback = EarlyStopping(monitor='val_loss', 
                                                 patience=self.epochs_to_wait)
-        checkpoint_callback = ModelCheckpoint(filepath='./checkpoints/' + farm +'.chckpt.best.h5', 
+        checkpoint_callback = ModelCheckpoint(filepath=os.path.join('./checkpoints', farm, 'chckpt.best.h5'), 
                                               monitor='val_loss', 
                                               verbose=1, 
                                               save_best_only=True, 
@@ -178,11 +179,12 @@ class FitGenerator(object):
 
 
 class CheckpointsMkdir(object):
-    def __init__(self):
-        self.bool = os.path.isdir('./checkpoints')
+    def __init__(self, farm):
+        self.farm = farm
+        self.bool = os.path.isdir(os.path.join('./checkpoints', self.farm))
     def check(self):
         if not self.bool:
-            os.mkdir('./checkpoints')
+            os.mkdir(os.path.join('./checkpoints', self.farm))
             #print('Checkpoints folder created. \n Skipping creation.')
         else:
             pass
@@ -207,6 +209,20 @@ class InputShape(object):
     def _shape(self):
         return Image.open(self.image).size # returns (width, height) tuple
 
+class ClassParser(object):
+    def __init__(self, input, farm, dir, **kwargs):
+        self.input = input
+        self.farm = farm
+        self.dir = dir
+    def save(self):
+        CheckpointsMkdir(self.farm).check()
+        filepath = os.path.join(self.dir, self.farm) + '\\labels.json'
+        with open(filepath, 'w') as fp:
+            json.dump(self.input, 
+                      fp, 
+                      sort_keys=True, 
+                      indent=4)
+        
 
 def main():
 
@@ -214,7 +230,11 @@ def main():
         description="Convolutional Neural Network training routine for cattle recognition",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         fromfile_prefix_chars='@')
-    parser.add_argument('--granja', '-ng', default='nome', help='Nome da granja')
+    parser.add_argument('--granja', '-ng', type=str, default='nome', help='Nome da granja')
+    parser.add_argument('--model', '-m', type=str, default='vgg16', help='Modelo a ser usado para treinamento. Valores suportados: vgg16, resnet50 ou senet50. Valor padrão: vgg16')
+    parser.add_argument('--epochs', '-ep', type=int, default=20, help='Número de épocas para treinar o modelo')
+    parser.add_argument('--batch_size', '-bs', type=int, default=30, help='Tamanho do lote das amostras para treinar o modelo')
+
     args = parser.parse_args()
 
     if not args.granja:
@@ -226,15 +246,21 @@ def main():
     step_size_train, \
     step_size_test = Generator(height=224, 
                                width=224, 
-                               bs=10, 
+                               bs=args.batch_size, 
                                dir='./dataset').dataset_generator()
 
-    deep_model = CustomVGGModel(model='vgg16', 
+    deep_model = CustomVGGModel(model=args.model, 
                                 height=224, 
                                 width=224, 
                                 channels=3, 
                                 nb_class=train_generator.class_indices.__len__(), # That way we get the number of classes automatically
-                                nb_freeze=None)
+                                nb_freeze=11)
+    
+    # Guardamos las clases, las vamos a necesitar para testeo
+
+    ClassParser(input=train_generator.class_indices,
+                farm=args.granja,
+                dir='./checkpoints').save()
     
     deep_model.model_build()
     deep_model.set_trainable()
@@ -249,7 +275,7 @@ def main():
                  test_generator=test_generator, 
                  step_size_train=step_size_train, 
                  step_size_test=step_size_test, 
-                 epochs=40).train(args.granja)
+                 epochs=args.epochs).train(args.granja)
 
 if __name__ == '__main__':
     main()

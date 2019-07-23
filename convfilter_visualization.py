@@ -246,12 +246,8 @@ if __name__ == '__main__':
     architecture = 'vgg16'
     vggface = VGGFace(include_top=False, 
                       model=architecture, 
-                      input_shape=(
-                        224, 
-                        224, 
-                        3
-                        )
-                            )
+                      input_shape=(224, 224, 3)
+                     )
 
         # Añadimos capas de clasificación a la red convolucional
     if architecture == 'vgg16':

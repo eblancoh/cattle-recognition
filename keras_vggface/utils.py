@@ -8,17 +8,17 @@ from keras import backend as K
 from keras.utils.data_utils import get_file
 import io
 
-V1_LABELS_PATH = 'https://github.com/rcmalli/keras-vggface/releases/download/v2.0/rcmalli_vggface_labels_v1.npy'
-V2_LABELS_PATH = 'https://github.com/rcmalli/keras-vggface/releases/download/v2.0/rcmalli_vggface_labels_v2.npy'
+V1_LABELS_PATH = 'https://github.com/eblancoh/cattle-recognition/releases/download/v0.1-downloads/vggface_labels_v1.npy'
+V2_LABELS_PATH = 'https://github.com/eblancoh/cattle-recognition/releases/download/v0.1-downloads/vggface_labels_v2.npy'
 
-VGG16_WEIGHTS_PATH = 'https://github.com/rcmalli/keras-vggface/releases/download/v2.0/rcmalli_vggface_tf_vgg16.h5'
-VGG16_WEIGHTS_PATH_NO_TOP = 'https://github.com/rcmalli/keras-vggface/releases/download/v2.0/rcmalli_vggface_tf_notop_vgg16.h5'
+VGG16_WEIGHTS_PATH = 'https://github.com/eblancoh/cattle-recognition/releases/download/v0.1-downloads/vggface_tf_vgg16.h5'
+VGG16_WEIGHTS_PATH_NO_TOP = 'https://github.com/eblancoh/cattle-recognition/releases/download/v0.1-downloads/vggface_tf_notop_vgg16.h5'
 
-RESNET50_WEIGHTS_PATH = 'https://github.com/rcmalli/keras-vggface/releases/download/v2.0/rcmalli_vggface_tf_resnet50.h5'
-RESNET50_WEIGHTS_PATH_NO_TOP = 'https://github.com/rcmalli/keras-vggface/releases/download/v2.0/rcmalli_vggface_tf_notop_resnet50.h5'
+RESNET50_WEIGHTS_PATH = 'https://github.com/eblancoh/cattle-recognition/releases/download/v0.1-downloads/vggface_tf_resnet50.h5'
+RESNET50_WEIGHTS_PATH_NO_TOP = 'https://github.com/eblancoh/cattle-recognition/releases/download/v0.1-downloads/vggface_tf_notop_resnet50.h5'
 
-SENET50_WEIGHTS_PATH = 'https://github.com/rcmalli/keras-vggface/releases/download/v2.0/rcmalli_vggface_tf_senet50.h5'
-SENET50_WEIGHTS_PATH_NO_TOP = 'https://github.com/rcmalli/keras-vggface/releases/download/v2.0/rcmalli_vggface_tf_notop_senet50.h5'
+SENET50_WEIGHTS_PATH = 'https://github.com/eblancoh/cattle-recognition/releases/download/v0.1-downloads/vggface_tf_senet50.h5'
+SENET50_WEIGHTS_PATH_NO_TOP = 'https://github.com/eblancoh/cattle-recognition/releases/download/v0.1-downloads/vggface_tf_notop_senet50.h5'
 
 VGGFACE_DIR = 'models/vggface'
 
@@ -62,12 +62,12 @@ def decode_predictions(preds, top=5):
     LABELS = None
     if len(preds.shape) == 2:
         if preds.shape[1] == 2622:
-            fpath = get_file('rcmalli_vggface_labels_v1.npy',
+            fpath = get_file('vggface_labels_v1.npy',
                              V1_LABELS_PATH,
                              cache_subdir=VGGFACE_DIR)
             LABELS = np.load(fpath)
         elif preds.shape[1] == 8631:
-            fpath = get_file('rcmalli_vggface_labels_v2.npy',
+            fpath = get_file('vggface_labels_v2.npy',
                              V2_LABELS_PATH,
                              cache_subdir=VGGFACE_DIR)
             LABELS = np.load(fpath)

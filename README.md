@@ -21,3 +21,5 @@ https://github.com/eclique/keras-gradcam/blob/master/gradcam_vgg.ipynb
 
 cd path/to/file
 tensorboard --logdir=./
+
+https://fairyonice.github.io/Grad-CAM-with-keras-vis.html
