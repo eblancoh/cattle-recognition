@@ -109,6 +109,9 @@ def main():
     if not args.granja:
         parser.print_help()
         raise ValueError('Você deve proporcionar o nome da granja após --granja')
+    if not args.img:
+        parser.print_help()
+        raise ValueError('Please, provide a relative path for the location of the image to be sampled after --img')
 
     # Cargamos modelo desde checkpoint
     model = ModelLoad(filepath=os.path.join('./checkpoints', args.granja, 'chckpt.best.h5')).model_loader()

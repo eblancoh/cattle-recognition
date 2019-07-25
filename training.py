@@ -104,7 +104,7 @@ class Generator(object):
         self.dir = dir # 'path-to-the-main-data-folder'
 
         self.generator=ImageDataGenerator(preprocessing_function=preprocess_input,
-                            rotation_range=30,
+                            rotation_range=20,
                             width_shift_range=self.width*0.01,
                             height_shift_range=self.height*0.01,
                             shear_range=0.01,
@@ -222,7 +222,6 @@ class ClassParser(object):
                       fp, 
                       sort_keys=True, 
                       indent=4)
-        
 
 def main():
 
@@ -254,7 +253,7 @@ def main():
                                 width=224, 
                                 channels=3, 
                                 nb_class=train_generator.class_indices.__len__(), # That way we get the number of classes automatically
-                                nb_freeze=11)
+                                nb_freeze=None)
     
     # Guardamos las clases, las vamos a necesitar para testeo
 
@@ -281,4 +280,3 @@ if __name__ == '__main__':
     main()
 
 # TODO: gridsearch
-# TODO: test

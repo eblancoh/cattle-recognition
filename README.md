@@ -23,3 +23,10 @@ cd path/to/file
 tensorboard --logdir=./
 
 https://fairyonice.github.io/Grad-CAM-with-keras-vis.html
+
+Generally, I would refer to this as transfer learning or network adaptation. That is, taking a network that has learned useful features from one domain and adapting that network and its developed features to another domain.
+
+That said, there appear to be many sources that closely conflate fine tuning with transfer learning. Therefore, I would say the difference in terminology is primarily opinion-based and suggest closure of this question on those grounds.
+
+
+https://github.com/jterrace/pyssim
