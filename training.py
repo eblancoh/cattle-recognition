@@ -28,7 +28,7 @@ class CustomVGGModel(object):
 
         self.hidden_dim_1 = 512
         self.hidden_dim_2 = 256
-        self.hidden_dim_2 = 128
+        self.hidden_dim_3 = 128
     
     def model_build(self):
 
@@ -72,6 +72,7 @@ class CustomVGGModel(object):
         self.x = self.last_layer
         self.x = Dense(self.hidden_dim_1, activation='relu', name='fc1')(self.x)
         self.x = Dense(self.hidden_dim_2, activation='relu', name='fc2')(self.x)
+        self.x = Dense(self.hidden_dim_3, activation='relu', name='fc3')(self.x)
         self.out = Dense(self.nb_class, activation='softmax', name='out')(self.x)
         # Now a custom model has been created based on our architecture
         # supported in Visual Geometry Group
