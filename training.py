@@ -26,12 +26,14 @@ class CustomVGGModel(object):
         self.nb_class = nb_class
         self.nb_freeze = nb_freeze
 
-        self.hidden_dim_1 = 256
+        self.hidden_dim_1 = 512
+        self.hidden_dim_2 = 256
         self.hidden_dim_2 = 128
     
     def model_build(self):
 
         # Carga del modelo por defecto
+        """
         self.vggface = VGGFace(include_top=False, 
                                  model=self.model, 
                                  input_shape=(
@@ -40,16 +42,34 @@ class CustomVGGModel(object):
                                      self.channels
                                      )
                                 )
-
+        """
+        self.vggface = VGGFace(include_top=True, 
+                                 model=self.model, 
+                                 input_shape=(
+                                     self.height, 
+                                     self.width, 
+                                     self.channels
+                                     )
+                                )
         # Añadimos capas de clasificación a la red convolucional
+        """
         if self.model == 'vgg16':
             self.last_layer = self.vggface.get_layer('pool5').output
         elif self.model == 'resnet50':
             self.last_layer = self.vggface.get_layer('avg_pool').output
         elif self.model == 'senet50':
             self.last_layer = self.vggface.get_layer('avg_pool').output
-
+        """
+        if self.model == 'vgg16':
+            self.last_layer = self.vggface.get_layer('flatten').output
+        elif self.model == 'resnet50':
+            self.last_layer = self.vggface.get_layer('flatten_1').output
+        elif self.model == 'senet50':
+            self.last_layer = self.vggface.get_layer('flatten_1').output
+        """
         self.x = Flatten(name='flatten')(self.last_layer)
+        """
+        self.x = self.last_layer
         self.x = Dense(self.hidden_dim_1, activation='relu', name='fc1')(self.x)
         self.x = Dense(self.hidden_dim_2, activation='relu', name='fc2')(self.x)
         self.out = Dense(self.nb_class, activation='softmax', name='out')(self.x)
@@ -105,9 +125,9 @@ class Generator(object):
 
         self.generator=ImageDataGenerator(preprocessing_function=preprocess_input,
                             rotation_range=20,
-                            width_shift_range=self.width*0.01,
-                            height_shift_range=self.height*0.01,
-                            shear_range=0.01,
+                            width_shift_range=self.width*0.005,
+                            height_shift_range=self.height*0.005,
+                            # shear_range=0.01,
                             horizontal_flip=True,
                             validation_split=0.2
                             ) 
@@ -230,7 +250,7 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         fromfile_prefix_chars='@')
     parser.add_argument('--granja', '-ng', type=str, default='nome', help='Nome da granja')
-    parser.add_argument('--model', '-m', type=str, default='vgg16', help='Modelo a ser usado para treinamento. Valores suportados: vgg16, resnet50 ou senet50. Valor padrão: vgg16')
+    parser.add_argument('--model', '-m', type=str, default='resnet50', help='Modelo a ser usado para treinamento. Valores suportados: vgg16, resnet50 ou senet50. Valor padrão: vgg16')
     parser.add_argument('--epochs', '-ep', type=int, default=20, help='Número de épocas para treinar o modelo')
     parser.add_argument('--batch_size', '-bs', type=int, default=30, help='Tamanho do lote das amostras para treinar o modelo')
 

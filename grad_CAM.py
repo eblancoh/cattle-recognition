@@ -103,7 +103,7 @@ def main():
     fromfile_prefix_chars='@')
     parser.add_argument('--granja', '-ng', help='Nome da granja')
     parser.add_argument('--img', '-img', type=str, default=None, help='Localização da imagem para obter previsões.')
-    parser.add_argument('--model', '-m', type=str, default='vgg16', help='Modelo a ser usado para treinamento. Valores suportados: vgg16, resnet50 ou senet50. Valor padrão: vgg16')
+    parser.add_argument('--model', '-m', type=str, default='resnet50', help='Modelo a ser usado para treinamento. Valores suportados: vgg16, resnet50 ou senet50. Valor padrão: vgg16')
     args = parser.parse_args()
 
     if not args.granja:

@@ -13,6 +13,7 @@ Traerme los checkpoints a local
 # https://medium.com/@14prakash/transfer-learning-using-keras-d804b2e04ef8
 # https://medium.com/@vijayabhaskar96/tutorial-image-classification-with-keras-flow-from-directory-and-generators-95f75ebe5720
 # https://towardsdatascience.com/transfer-learning-and-image-classification-using-keras-on-kaggle-kernels-c76d3b030649
+# https://towardsdatascience.com/a-comprehensive-hands-on-guide-to-transfer-learning-with-real-world-applications-in-deep-learning-212bf3b2f27a
 
 https://medium.com/@mohamedchetoui/grad-cam-gradient-weighted-class-activation-mapping-ffd72742243a
 https://github.com/eclique/keras-gradcam/blob/master/gradcam_vgg.ipynb
