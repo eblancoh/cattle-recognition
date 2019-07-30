@@ -36,6 +36,14 @@ la cual incluye la parte de clasificación original con todas las capas densas, 
 
 Los pesos para los modelos se pueden obtener en el [siguiente enlace](https://github.com/eblancoh/cattle-recognition/releases/tag/v0.1-downloads).
 
+## Setup del entorno
+
+Se recomienda hacer uso de Anaconda para la creación de un entorno virtual.
+
+```bash 
+$ conda create --name <env> --file requirements.txt
+```
+
 ## Ejemplo de uso
 
 ### 1. Data Cleaning (opcional)
