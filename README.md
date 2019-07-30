@@ -1,7 +1,8 @@
 # Cattle Recognition - Identificación de Ganado mediante Redes Convolucionales
-![alt text](cow_meme.jpg)
 
-
+<p align="center">
+<img width="500" height="300" src=./support/cow_meme.jpg>
+</p>
 Este proyecto tiene como misión hacer uso de redes convolucionales para la identificación de ganado (vacas, cerdos, etc.) haciendo uso de redes neuronales profundas convolucionales. Las capas convolucionales actúan como extractores de características.
 
 Con la intención de ahorrar tiempo, se pretende hacer uso de modelos ya entrenados de Deep Learning dedicados a reconocimiento facial de seres humanos para la identificación de ganado. *(Pendiente de probar).*
