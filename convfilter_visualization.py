@@ -14,7 +14,7 @@ from keras import backend as K
 
 
 def normalize(x):
-    """utility function to normalize a tensor.
+    """Utility function to normalize a tensor.
 
     # Arguments
         x: An input tensor.
@@ -26,7 +26,7 @@ def normalize(x):
 
 
 def deprocess_image(x):
-    """utility function to convert a float array into a valid uint8 image.
+    """Utility function to convert a float array into a valid uint8 image.
 
     # Arguments
         x: A numpy-array representing the generated image.
@@ -52,7 +52,7 @@ def deprocess_image(x):
 
 
 def process_image(x, former):
-    """utility function to convert a valid uint8 image back into a float array.
+    """Utility function to convert a valid uint8 image back into a float array.
        Reverses `deprocess_image`.
 
     # Arguments
@@ -240,22 +240,25 @@ def visualize_layer(model,
     # Finally draw and store the best filters to disk
     _draw_filters(processed_filters)
 
+def main():
 
-if __name__ == '__main__':
-
-    architecture = 'vgg16'
+    architecture = 'resnet50'
+    # No es necesario cargar todo el checkpoint
     vggface = VGGFace(include_top=False, 
                       model=architecture, 
                       input_shape=(224, 224, 3)
                      )
+    # TODO: Si lo que queremos es cargar el checkpoint de una determinada 
+    # granja tras el entrenamiento, se podría hacer mediante 
+    # load_model()
 
-        # Añadimos capas de clasificación a la red convolucional
+    # Añadimos capas de clasificación a la red convolucional
     if architecture == 'vgg16':
-        last_layer = vggface.get_layer('pool5').output
+        last_layer = vggface.get_layer('flatten').output
     elif architecture == 'resnet50':
-        last_layer = vggface.get_layer('avg_pool').output
+        last_layer = vggface.get_layer('flatten_1').output
     elif architecture == 'senet50':
-        last_layer = vggface.get_layer('avg_pool').output
+        last_layer = vggface.get_layer('flatten_1').output
 
     model = Model(inputs=vggface.input, outputs=last_layer)
     print('Model loaded.')
@@ -265,9 +268,12 @@ if __name__ == '__main__':
     # (see model definition at keras/applications/vgg16.py)
     LAYER_NAME = 'conv5_3'
 
-    #vgg = vgg16.VGG16(weights='imagenet', include_top=False)
-    #vgg.summary()
-    
+    # TODO: limpiar el script un poco.
+    # vgg = vgg16.VGG16(weights='imagenet', include_top=False)
+    # vgg.summary()
+
     # example function call
     visualize_layer(model, LAYER_NAME)
-    #visualize_layer(vgg, LAYER_NAME)
+
+if __name__ == '__main__':
+    main()
