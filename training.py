@@ -8,8 +8,10 @@ from keras.applications.vgg16 import preprocess_input
 from keras.preprocessing.image import ImageDataGenerator
 from keras.optimizers import SGD
 from keras.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard
+from sklearn.metrics import classification_report, confusion_matrix
 from datetime import datetime
 from PIL import Image
+import numpy as np
 import argparse
 import json
 import os
@@ -197,6 +199,18 @@ class FitGenerator(object):
                                    checkpoint_callback,
                                    tensorboard_callback
                                    ])
+    
+    def confusion(self, farm):
+        class_pred = self.model.predict_generator(self.test_generator, self.step_size_test + 1)
+        class_pred = np.argmax(class_pred, axis=1)
+        # Obtenemos los nombres de las etiquetas como una lista desde json
+        with open(os.path.join('./checkpoints', farm, 'labels.json')) as json_file:
+            classes = json.load(json_file)
+        target_names = list(classes.keys())
+        print('Classification Report')
+        print(classification_report(self.test_generator.classes, 
+                                    class_pred, 
+                                    target_names=target_names))
 
 
 class CheckpointsMkdir(object):
@@ -274,7 +288,7 @@ def main():
                                 width=224, 
                                 channels=3, 
                                 nb_class=train_generator.class_indices.__len__(), # That way we get the number of classes automatically
-                                nb_freeze=None)
+                                nb_freeze=-4)
     
     # Guardamos las clases, las vamos a necesitar para testeo
 
@@ -296,6 +310,13 @@ def main():
                  step_size_train=step_size_train, 
                  step_size_test=step_size_test, 
                  epochs=args.epochs).train(args.granja)
+    
+    FitGenerator(model=compiled_deep_model, 
+                 train_generator=train_generator, 
+                 test_generator=test_generator, 
+                 step_size_train=step_size_train, 
+                 step_size_test=step_size_test, 
+                 epochs=args.epochs).confusion(args.granja)
 
 if __name__ == '__main__':
     main()

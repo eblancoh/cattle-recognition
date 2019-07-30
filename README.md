@@ -1,8 +1,11 @@
 # Cattle Recognition - Identificación de Ganado mediante Redes Convolucionales
+![alt text](cow_meme.jpg)
 
-Este proyecto tiene como misión hacer uso de redes convolucionales para la identificación de ganado (vacas, cerdos, etc.) haciendo uso de redes neuronales profundas convolucionales. 
 
-Con la intención de ahorrar tiempo, se pretende hacer uso de modelos ya entrenados de Deep Learning dedicados a reconocimiento facial de seres humanos. (Pendiente de probar).
+Este proyecto tiene como misión hacer uso de redes convolucionales para la identificación de ganado (vacas, cerdos, etc.) haciendo uso de redes neuronales profundas convolucionales. Las capas convolucionales actúan como extractores de características.
+
+Con la intención de ahorrar tiempo, se pretende hacer uso de modelos ya entrenados de Deep Learning dedicados a reconocimiento facial de seres humanos para la identificación de ganado. *(Pendiente de probar).*
+
 Para ello, se realiza Transfer Learning y Fine-Tuning de los modelos de Oxford VGGFace a través del endopoint de TensorFlow. El código de este repositorio soporta tanto los modelos **VGG16** como **RESNET50** o **SENET50**:
 
 ```python
@@ -30,14 +33,27 @@ include_top=True
 ```
 la cual incluye la parte de clasificación original con todas las capas densas, lo que lo hace más pesado.
 
-## Entrenamiento
+## Ejemplo de uso
+
+### 1. Data Cleaning (opcional)
+
+Para evitar la baja varianza entre imágenes se emplea la medida del índice de similitud estructural (SSIM) para medir la similitud entre fotografías. Esto ayuda a evitar datos muy similares (casi idénticos en las particiones de datos de validación y entrenamiento.
+
+En los subdirectorios anidados de `./dataset` se checkea una imagen contra todas las demás y se van eliminando aquellas que sean similares por encima de un valor de similitud (entre `0` y `1`) indicado por el usuario.
+
+```bash
+$ python ssim.py --dir "dir/to/images" --threshold 0.95
+```
+
+### 2. Entrenamiento
 
 Ejemplo del entrenamiento de un dataset de imágenes:
 ```bash
 $ python training.py --granja test --model resnet50 --epochs 20 --batch_size 30
 ```
+La rutina realiza el entrenamiento, guarda el mejor checkpoint y devuelve un reporte de clasificación sobre el test dataset.
 
-### Customización de arquitectura para Transfer Learning
+#### 2.1. Customización de arquitectura para Transfer Learning
 El script `training.py` se lanza tal y como se muestra arriba. Este script entrena una Red Neuronal convolucional que puede ser `vgg16`, `resnet50` o `senet50` y que acaba en un clasificador que, por defecto, tiene la siguiente implementación `Sequential` de Keras:
 
 ```python
@@ -51,13 +67,13 @@ Clasificador de capas densas totalmente conectadas que se meten tras la capa `fl
 
 `TODO:` ver si la regularización por Dropout mejora la performance de los modelos.
 
-### Congelación de capas para Fine-Tuning
+#### 2.2. Congelación de capas para Fine-Tuning
 Normalmente, para Transfer Learning y Fine-Tuning de modelos con dataset pequeños, lo que se hace es congelar la arquitectira transferida y entrenar sólamente el clasificador customizado por nosotros. El número de capas a definir como entrenables se especifica en la función `main()` en la línea `277`:
 * `nb_freeze = None` indica que no se congela ninguna capa. Todas las capas son entrenables.
 * `nb_freeze = 10` indica que se congelan las 10 primeras capas. Las restantes son entrenables por defecto.
 * `nb_freeze = -4` indica que se congelan todas menos las 4 últimas capas. Las restantes son entrenables por defecto.
 
-### Dataset
+#### 2.3. Dataset
 El dataset sobre el que se desea entrenar debe situarse en la carpeta `./dataset`. Para cada clase, se deben agrupar todas las imágenes en subdirectorios. 
 
 Los batches de entrenamiento, validación, así como el núemro de clases a predecir y, por lo tanto, la arquitectura de salida del modelo, están definidas tanto por el generador `ImageDataGenerator()` como por la función `flow_from_directory()`.
@@ -67,7 +83,7 @@ Sobre el dataset disponible se hace data augmentation:
 * **Desplazamiento en altura y anchura** de hasta el `5%` de la dimensión de la imagen;
 * **Horizontal flipping**.
 
-# Logueo del entrenamiento
+#### 2.4. Logueo del entrenamiento
 
 Para el entrenamiento se han definido dos callbacks: 
 * **EarlyStopping** para evitar overfitting o alargar innecesariamente el tiempo de entrenamiento. 
@@ -80,7 +96,7 @@ $ tensorboard --logdir=./ --port 6006
 
 De manera que con sólo ir a tu navegador a `http://localhost:6006/` se puede visualizar cómo ha transcurrido el entrenamiento. Ver el [siguiente artículo](https://itnext.io/how-to-use-tensorboard-5d82f8654496) para aclarar dudas.
 
-## Testeo
+### 3. Testeo
 De cara al testeo de un modelo ya entrenado con una imagen de muestra, se ejecuta el script `testing.py`:
 ```bash
 $ python testing.py --granja test  --img "path/to/img"
@@ -98,7 +114,7 @@ $ python testing.py --granja test  --img "path/to/img"
 }
 ```
 
-## Grad-CAM Checking
+### 4. Grad-CAM Checking
 
 Un inconveniente frecuentemente citado del uso de redes neuronales es que entender exactamente lo que están modelando es muy difícil. Esto se complica aún más utilizando redes profundas. Sin embargo, esto ha comenzado a atraer una gran cantidad de interés de investigación, especialmente para las CNNs para garantizar que la "atención" de la red se centre en las características reales y discriminativas del propio animal, en lugar de otras partes de la imagen que puedan contener información discriminatoria (por ejemplo, una etiqueta de clase, una marca de tiempo impresa en la imagen o un borde sin interés).
 
@@ -109,28 +125,12 @@ $ python grad_CAM.py --granja test --model resnet50 --img "path/to/img"
 ```
 Lo cual te devuelve un mapa de calor sobre la imagen de las regiones de interés.
 
-## Data Cleaning
-
-Para evitar la baja varianza entre imágenes se emplea la medida del índice de similitud estructural (SSIM) para medir la similitud entre fotografías. Esto ayuda a evitar datos muy similares (casi idénticos en las particiones de datos de validación y entrenamiento.
-
-En los subdirectorios anidados de `./dataset` se checkea una imagen contra todas las demás y se van eliminando aquellas que sean similares por encima de un valor de similitud (entre `0` y `1`) indicado por el usuario.
-
-```bash
-$ python ssim.py --dir "dir/to/images" --threshold 0.95
-```
-
 ## Enlaces de Soporte e Interés:
 
 * [Keras Framework](www.keras.io)
-
 * [Oxford VGGFace Website](http://www.robots.ox.ac.uk/~vgg/software/vgg_face/)
-
-* [Related Paper 1](http://www.robots.ox.ac.uk/~vgg/publications/2015/Parkhi15/parkhi15.pdf)
-
-* [Related Paper 2](http://www.robots.ox.ac.uk/~vgg/data/vgg_face2/vggface2.pdf)
-
+* [Arkhi et al.: Deep Face Recognition](http://www.robots.ox.ac.uk/~vgg/publications/2015/Parkhi15/parkhi15.pdf)
 * [Towards on-farm pig face recognition using convolutional neural networks](https://www.sciencedirect.com/science/article/pii/S0166361517304992?via%3Dihub#fig0025)
-
 * [VGGFace implementation with Keras Framework](https://github.com/rcmalli/keras-vggface)
 * [Deep Learning For Beginners Using Transfer Learning In Keras](https://towardsdatascience.com/keras-transfer-learning-for-beginners-6c9b8b7143e)
 * [Transfer learning from pre-trained models](https://towardsdatascience.com/transfer-learning-from-pre-trained-models-f2393f124751)
