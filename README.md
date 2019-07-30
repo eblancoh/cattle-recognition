@@ -34,6 +34,8 @@ include_top=True
 ```
 la cual incluye la parte de clasificación original con todas las capas densas, lo que lo hace más pesado.
 
+Los pesos para los modelos se pueden obtener en el [siguiente enlace](https://github.com/eblancoh/cattle-recognition/releases/tag/v0.1-downloads).
+
 ## Ejemplo de uso
 
 ### 1. Data Cleaning (opcional)
