@@ -5,6 +5,7 @@ import os
 import json
 import numpy as np
 import argparse
+import operator
 
 
 class ModelLoad(object):
@@ -47,8 +48,10 @@ class ImageScore(object):
         for i in range(len(classes)):
             preds[inv_classes[i]] = scores[i].item()
         
-        preds = json.dumps(preds, indent=4, sort_keys=True)
-        print(preds)
+        # Ordenamos de mayor a menor score
+        preds = {k: preds[k] for k in sorted(preds, key=preds.get, reverse=True)}
+        preds = json.dumps(preds, indent=4, sort_keys=False)
+        #print(preds)
         return preds
 
 def main():

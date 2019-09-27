@@ -7,6 +7,8 @@ import numpy as np
 from keras import backend as K
 from keras.utils.data_utils import get_file
 import io
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 V1_LABELS_PATH = 'https://github.com/eblancoh/cattle-recognition/releases/download/v0.1-downloads/vggface_labels_v1.npy'
 V2_LABELS_PATH = 'https://github.com/eblancoh/cattle-recognition/releases/download/v0.1-downloads/vggface_labels_v2.npy'

@@ -1,0 +1,119 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="jumbotron jumbotron-fluid bg-dark">
+
+        <div class="jumbotron-background">
+            <img src="../static/img/cows-wallpaper.jpg" class="blur ">
+        </div>
+        
+        <div class="container text-white">
+        
+            <h1 class="display-4">Clasificador de ganado</h1>
+            <p class="lead">Identificando ganado haciendo uso de Deep Learning con redes convolucionales</p>
+            <hr class="my-4">
+
+            <p class="lead">Seleccione una imagen a identificar.</p>
+                    <form id="upload-file" method="post" enctype="multipart/form-data">
+                        <label for="imageUpload" class="upload-label">
+                           Browse...
+                            </label>
+                        <input type="file" name="file" id="imageUpload" accept=".png, .jpg, .jpeg">
+                        </form>
+
+                    <div class="image-section" style="display:none;">
+                        <div class="img-preview">
+                            <div id="imagePreview">
+
+                                </div>
+                            </div>
+
+                            <p class="lead">Pulse para predecir y visualizar scores.</p>
+                            <button type="button" class="btn btn-primary btn-lg " id="btn-predict">¡Predecir!</button>
+
+                        </div> 
+            </div>
+                
+            
+
+        
+        </div>
+        <!-- /.container -->
+        
+        
+        </div>
+        <!-- /.jumbotron -->
+        <div class="container">
+                <div class="loader" style="display:none;">
+                        <div class="loader_ajax_small"></div>
+                    </div>
+            
+                <table id="resultTable" class="table table-hover text-center"></table>
+        
+                <p></p>
+        </div>
+
+        <div class="container text-center">
+            <button type="button" class="btn btn-primary btn-lg " id="btn-new-farm">Cambiar granja</button>
+        </div>
+        
+        
+        <!-- 
+        For IE support of object-fit add this to your document
+        &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/object-fit-images/3.2.4/ofi.min.js"&gt;&lt;/script&gt;
+        -->
+
+
+        <footer class="footer">
+                <div class="references container text-center">
+                    <p>La adecuación de las imágenes subidas es responsabilidad exclusiva de los usuarios.</p>
+                    <span class="text-muted">Copyright &copy; 2019, Telefónica CDO. All Rights Reserved.</span>
+                </div>
+            </footer>
+
+<style>
+.jumbotron {
+    position:relative;
+    overflow:hidden;
+    min-height: 1000px;
+}
+
+.jumbotron .container {
+    position:relative;
+    z-index:2;
+    
+    background:rgba(0,0,0,0.2);
+    padding:2rem;
+    border:1px solid rgba(0,0,0,0.1);
+    border-radius:3px;
+}
+
+.jumbotron-background {
+    object-fit:cover;
+    font-family: 'object-fit: cover;';
+    position:absolute;
+    top:0;
+    z-index:1;
+    width:100%;
+    height:100%;
+    opacity:0.5;
+}
+
+img.blur {
+    -webkit-filter: blur(2px);
+    filter: blur(2px);
+    filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius='2');
+
+}
+
+form {
+    display: inline-block;
+}
+
+button, input, optgroup, select, textarea {
+    margin: 0;
+    margin-left: 20px;
+    font-family: inherit;
+}
+</style>
+    
+{% endblock %}

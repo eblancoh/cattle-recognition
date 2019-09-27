@@ -5,7 +5,8 @@
 '''
 from __future__ import print_function
 from keras_vggface.models import RESNET50, VGG16, SENET50
-
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 def VGGFace(include_top=True, model='vgg16', weights='vggface',
             input_tensor=None, input_shape=None,

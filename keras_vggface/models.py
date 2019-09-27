@@ -18,7 +18,8 @@ from keras.engine.topology import get_source_inputs
 import warnings
 from keras.models import Model
 from keras import layers
-
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 def VGG16(include_top=True, weights='vggface',
           input_tensor=None, input_shape=None,
