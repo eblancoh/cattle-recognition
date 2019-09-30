@@ -1,4 +1,4 @@
-# Cattle Recognition - Identificación de Ganado con Convolutional Neural Networks (CCNs)
+# Cattle Recognition - Identificación de Ganado con Convolutional Neural Networks (CNNs)
 
 <p align="center">
 <img width="500" height="300" src=./support/cow_meme.jpg>
