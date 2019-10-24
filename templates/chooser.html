@@ -45,7 +45,7 @@
                     <div class="form-group">
                         <div class="input-group">
                             <span class="input-group-addon"></span>
-                                <select name="comp_select" class="selectpicker form-control">
+                                <select name="comp_select" class="selectpicker form-control" data-live-search="true">
                                 <option selected disabled hidden>Nombre de la granja</option>
                                 {% for o in data %}
                                 <option value="{{ o.granja }}">{{ o.granja }}</option>

@@ -4,14 +4,20 @@ import os
 import tensorflow as tf
 from testing import ModelLoad, ImageScore
 import operator
+import configparser
+from keras import backend as K 
+
+
+# Configuration loading
+config = configparser.ConfigParser()
+config.read("config.ini")
 
 # Define a flask app
 app = Flask(__name__)
-app.secret_key = "56n68oS2PiciB38DEImv"
-
+app.secret_key = config["app"]["app-secret-key"]
 
 def get_file_path_and_save(request):
-    # Get the file from post requestñ
+    # Get the file from post request
     f = request.files['file']
 
     # Save the file to ./uploads
@@ -33,6 +39,9 @@ def loading_model(facility):
 
 @app.route('/')
 def index():
+    # Por defecto limpiamos sesión por si no lanzamos testeo tras cargar el modelo al 
+    # volver a la ruto "/" desde index.html.
+    K.clear_session()
     # Leemos todas las granjas habilitadas en el sistema
     farms = next(os.walk(os.path.join(os.getcwd(), 'checkpoints')))[1]
     # Sólo nos quedamos con aquellas que tienen un modelo entrenado:
@@ -74,6 +83,10 @@ def predict():
         # Devolvemos las predicciones
         print(preds)
         return jsonify(preds)
+        
+def to_farm():
+    session.pop('facility')
+    return redirect(url_for('index'))
 
 # start the server with the 'run()' method
 if __name__ == '__main__':

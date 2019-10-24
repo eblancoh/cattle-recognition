@@ -13,7 +13,7 @@ class ModelLoad(object):
         self.filepath = filepath
     def model_loader(self):
         try:
-            print("Trying to restore last checkpoint ...")
+            print("Trying to restore last checkpoint from the farm...")
             model = load_model(filepath=self.filepath, compile=True)
             print("Restored model from:", self.filepath)
 
